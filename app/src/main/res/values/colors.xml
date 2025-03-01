@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="background_dark">#121212</color>
+    <color name="toolbar_dark">#1E1E1E</color>
+    <color name="fab_background">#4285F4</color>
+    <color name="colorAccent">#03DAC6</color> <!-- Ensure this line is correctly formatted -->
+    <color name="grey">#434242</color>
+    <color name="selected_button">#FF2196F3</color>
+    <color name="unselected_button">#FF757575</color>
+    <color name="colorPrimary">#6200EE</color>
+</resources>
