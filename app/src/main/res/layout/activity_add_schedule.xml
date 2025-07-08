@@ -16,42 +16,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:background="@color/black"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <!-- Back Button -->
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Back"
                 android:padding="8dp"
-                android:contentDescription="Back" />
+                android:src="@drawable/ic_back" />
 
             <!-- Centered Title -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Create"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:background="@color/black"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:ellipsize="end"
-                android:background="@color/black"/>
+                android:text="Create"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <!-- Close Button -->
             <ImageButton
                 android:id="@+id/btn_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_close"
                 android:background="@color/black"
+                android:contentDescription="Close"
                 android:padding="8dp"
-                android:contentDescription="Close" />
+                android:src="@drawable/ic_close" />
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -75,7 +75,7 @@
             android:id="@+id/et_schedule_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Auto Silence 1"
+            android:hint="Schedule Name"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="?attr/android:textColorPrimary"
             android:background="?attr/colorSurface"
@@ -106,6 +106,9 @@
                 android:text="Start at"
                 android:textColor="?attr/colorOnSurface"
                 android:backgroundTint="?attr/colorPrimary" />
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_end"
@@ -143,6 +146,9 @@
                 android:text="Everyday"
                 android:textColor="?attr/colorOnSurface"
                 android:backgroundTint="?attr/colorPrimary" />
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_custom"
@@ -156,10 +162,11 @@
         </LinearLayout>
 
         <!-- Action Section -->
+        <!-- Action Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Action"
+            android:text="Mode"
             android:background="@color/grey"
             android:textColor="@color/white"
             android:textSize="18sp" />
@@ -177,8 +184,9 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:src="@drawable/ic_mute"
+                android:src="@drawable/silent"
                 android:padding="8dp"
+                android:scaleType="centerInside"
                 android:contentDescription="Mute" />
 
             <Space
@@ -190,8 +198,9 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:src="@drawable/ic_vibrate"
+                android:src="@drawable/vibrate"
                 android:padding="8dp"
+                android:scaleType="centerInside"
                 android:contentDescription="Vibrate" />
         </LinearLayout>
 

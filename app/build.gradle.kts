@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.application") version "8.8.0"
-    id("kotlin-android") version "1.9.21"
-    id("kotlin-parcelize") version "1.9.21"
+    id("com.android.application") version "8.8.2"
+    id("kotlin-android") // Removed version
+    id("kotlin-parcelize") // Removed version
     id("com.google.devtools.ksp") version "1.9.20-1.0.13" // Use a verified version
 }
 

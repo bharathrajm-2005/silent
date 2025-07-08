@@ -3,12 +3,16 @@ package com.example.silent
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
+import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -22,12 +26,13 @@ class AddScheduleActivity : AppCompatActivity() {
     private lateinit var vibrateButton: ImageButton
     private var startTimeCalendar: Calendar = Calendar.getInstance()
     private var endTimeCalendar: Calendar = Calendar.getInstance()
-    private var isEveryday: Boolean = true // Default to everyday
-    private var isVibrate: Boolean = false // Default to silent
-    private var selectedDays: MutableList<Int> = mutableListOf() // Store selected days (0 = Sunday, 1 = Monday, etc.)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private var isEveryday: Boolean = true
+    private var isVibrate: Boolean = false
+    private var selectedDays: MutableList<Int> = mutableListOf()
+    override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        hideStatusBar()
+
         setContentView(R.layout.activity_add_schedule)
 
         nameEditText = findViewById(R.id.et_schedule_name)
@@ -38,7 +43,14 @@ class AddScheduleActivity : AppCompatActivity() {
         silentButton = findViewById(R.id.btn_silent)
         vibrateButton = findViewById(R.id.btn_vibrate)
 
-        findViewById<ImageButton>(R.id.btn_back).setOnClickListener { onBackPressed() }
+        findViewById<ImageButton>(R.id.btn_back).setOnClickListener {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                onBackPressedDispatcher.onBackPressed()
+            } else {
+                @Suppress("DEPRECATION")
+                onBackPressed()
+            }
+        }
         findViewById<ImageButton>(R.id.btn_close).setOnClickListener { finish() }
 
         startButton.setOnClickListener { showTimePickerDialog(true) }
@@ -67,6 +79,28 @@ class AddScheduleActivity : AppCompatActivity() {
         }
 
         findViewById<FloatingActionButton>(R.id.fab_save).setOnClickListener { saveSchedule() }
+    }
+
+    private fun hideStatusBar() {
+        // For API 30+ (Android 11+)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.statusBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        // For compatibility with older versions
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideStatusBar()
+        }
     }
 
     private fun updateButtonStyles() {
@@ -150,21 +184,29 @@ class AddScheduleActivity : AppCompatActivity() {
                 }
                 if (isStart) {
                     startTimeCalendar = selectedTime
-                    startButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                    startButton.text = String.format("%d:%02d %s",
+                        if (hourOfDay == 0) 12 else if (hourOfDay > 12) hourOfDay - 12 else hourOfDay,
+                        minute,
+                        if (hourOfDay < 12) "AM" else "PM")
                 } else {
                     endTimeCalendar = selectedTime
-                    endButton.text = String.format("%02d:%02d", hourOfDay, minute)
+                    endButton.text = String.format("%d:%02d %s",
+                        if (hourOfDay == 0) 12 else if (hourOfDay > 12) hourOfDay - 12 else hourOfDay,
+                        minute,
+                        if (hourOfDay < 12) "AM" else "PM")
                 }
             },
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
-            true
+            false // Changed to false for 12-hour format
         ).show()
     }
-
     private fun saveSchedule() {
         val name = nameEditText.text.toString()
-        if (name.isBlank()) return
+        if (name.isBlank()) {
+            // Show error message if name is blank
+            return
+        }
 
         val schedule = Schedule(
             name = name,
@@ -172,12 +214,13 @@ class AddScheduleActivity : AppCompatActivity() {
             endTime = endTimeCalendar.timeInMillis,
             isEveryday = isEveryday,
             selectedDays = if (isEveryday) emptyList() else selectedDays.toList(),
-            isVibrate = isVibrate // Make sure the field name in the Schedule class is 'isVibrate'
+            isVibrate = isVibrate
         )
 
-        setResult(RESULT_OK, Intent().apply {
+        val resultIntent = Intent().apply {
             putExtra("schedule", schedule)
-        })
+        }
+        setResult(RESULT_OK, resultIntent)
         finish()
     }
 }

@@ -4,10 +4,11 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+
 @Parcelize
 @Entity(tableName = "schedules")
 data class Schedule(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+    @PrimaryKey(autoGenerate = true) var id: Long = 0,
     val name: String,
     val startTime: Long,
     val endTime: Long,
